@@ -101,7 +101,7 @@ module StripeMock
       private
 
       def ensure_payment_method_required_params(params)
-        if param[:payment_method].present?
+        if params[:payment_method].present?
           require_param(:payment_method)
         else
           require_param(:type)
