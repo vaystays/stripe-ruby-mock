@@ -1236,7 +1236,7 @@ module StripeMock
     def self.mock_payment_method(params = {})
       payment_method_id = params[:id] || 'pm_1ExEuFL2DI6wht39WNJgbybl'
 
-      type = params[:type].to_sym
+      type = params[:type]&.to_sym || :card
       data = {
         card: {
           brand: 'visa',
@@ -1273,7 +1273,7 @@ module StripeMock
       {
         id: payment_method_id,
         object: 'payment_method',
-        type: params[:type],
+        type: type,
         billing_details: {
           address: {
             city: 'New Orleans',

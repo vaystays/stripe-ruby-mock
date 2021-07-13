@@ -1,7 +1,7 @@
 module StripeMock
   module RequestHandlers
     module PaymentMethods
-      ALLOWED_PARAMS = [:customer, :type]
+      ALLOWED_PARAMS = [:customer, :type, :payment_method]
 
       def PaymentMethods.included(klass)
         klass.add_handler 'post /v1/payment_methods',             :new_payment_method
@@ -101,17 +101,15 @@ module StripeMock
       private
 
       def ensure_payment_method_required_params(params)
-        if params[:payment_method].present?
-          require_param(:payment_method)
-        else
-          require_param(:type)
-          if invalid_type?(params[:type])
-            raise Stripe::InvalidRequestError.new(
-              'Invalid type: must be one of card, ideal or sepa_debit',
-              nil,
-              http_status: 400
-            )
-          end
+        return unless params[:payment_method].nil?
+
+        require_param(:type) if params[:type].nil?
+        if invalid_type?(params[:type])
+          raise Stripe::InvalidRequestError.new(
+            'Invalid type: must be one of card, ideal or sepa_debit',
+            nil,
+            http_status: 400
+          )
         end
       end
 
