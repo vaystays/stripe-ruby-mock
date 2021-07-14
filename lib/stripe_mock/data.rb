@@ -138,6 +138,12 @@ module StripeMock
       }.merge(params)
     end
 
+    def self.mock_token(params)
+      {
+        id: 'tok_1JD7B0FfVY1v5tPxEvKT5HLU'
+      }
+    end
+
     def self.mock_customer(sources, params)
       cus_id = params[:id] || "test_cus_default"
       currency = params[:currency]
