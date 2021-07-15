@@ -43,7 +43,7 @@ module StripeMock
           # params[:card] is a hash of cc info; "Sanitize" the card number
           bank_account = params[:bank_account]
         else
-          customer = assert_existence :customer, cus_id, customers[cus_id]
+          customer = assert_existence :customer, cus_id, customers[cus_id] || customers[Stripe.api_key][cus_id]
           customer_card = get_card(customer, customer[:default_source])
         end
 
