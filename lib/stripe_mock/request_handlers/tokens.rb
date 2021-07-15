@@ -43,7 +43,7 @@ module StripeMock
           # params[:card] is a hash of cc info; "Sanitize" the card number
           bank_account = params[:bank_account]
         else
-          customer = assert_existence :customer, cus_id, customers[stripe_account][cus_id] || customers[Stripe.api_key][cus_id]
+          customer = assert_existence :customer, cus_id, customers[cus_id]
           customer_card = get_card(customer, customer[:default_source])
         end
 
@@ -56,7 +56,7 @@ module StripeMock
           token_id = generate_card_token(customer_card.dup)
           card = @card_tokens[token_id]
 
-          Data.mock_card_token(params.merge :id => token_id, :card => card)
+          result = Data.mock_card_token(params.merge :id => token_id, :card => card)
         end
       end
 
