@@ -66,6 +66,7 @@ module StripeMock
         route =~ method_url
         payment_intent_id = $1 || params[:payment_intent]
         payment_intent = assert_existence :payment_intent, payment_intent_id, payment_intents[payment_intent_id]
+        payment_intent[:latest_charge] = payment_intent[:charges][:data].first if params[:expand] == ['latest_charge']
 
         payment_intent = payment_intent.clone
         payment_intent
@@ -184,7 +185,7 @@ module StripeMock
 
         charge_id = new_id('ch')
 
-        charges[charge_id] = Data.mock_charge(
+        charge = Data.mock_charge(
           id: charge_id,
           balance_transaction: btxn,
           payment_intent: payment_intent[:id],
@@ -192,8 +193,8 @@ module StripeMock
           currency: payment_intent[:currency],
           payment_method: payment_intent[:payment_method]
         )
-
-        payment_intent[:charges][:data] << charges[charge_id].clone
+        charges[charge[:id]] = charge
+        payment_intent[:charges][:data] << charge
 
         payment_intent
       end
